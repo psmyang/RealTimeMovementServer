@@ -68,22 +68,24 @@ public class NetworkedServer : MonoBehaviour
         #region Simulated Latency
 
         LinkedList<MsgToSendWithLatency> processMe = null;
-        foreach(MsgToSendWithLatency m in msgsToSendWithLatency)
+
+
+        foreach (MsgToSendWithLatency m in msgsToSendWithLatency)
         {
             m.latency -= Time.deltaTime;
 
-            if(m.latency <= 0)
+            if (m.latency <= 0)
             {
-                if(processMe == null)
+                if (processMe == null)
                     processMe = new LinkedList<MsgToSendWithLatency>();
-                
+
                 processMe.AddLast(m);
             }
         }
 
-        if(processMe != null)
+        if (processMe != null)
         {
-            foreach(MsgToSendWithLatency m in processMe)
+            foreach (MsgToSendWithLatency m in processMe)
             {
                 msgsToSendWithLatency.Remove(m);
                 SendMessageToClient(m.msg, m.id);
@@ -91,8 +93,8 @@ public class NetworkedServer : MonoBehaviour
         }
 
         #endregion
-
     }
+
     public void SendMessageToClient(string msg, int id)
     {
         byte error = 0;
@@ -104,14 +106,13 @@ public class NetworkedServer : MonoBehaviour
     {
         msgsToSendWithLatency.AddLast(new MsgToSendWithLatency(msg, id));
     }
-
 }
 
 class MsgToSendWithLatency
 {
     public string msg;
     public int id;
-    const float LatencySimulationTotal = 0.2f;
+    const float LatencySimulationTotal = 0.5f;
     public float latency = LatencySimulationTotal;
 
     public MsgToSendWithLatency(string Msg, int ID)
@@ -119,6 +120,5 @@ class MsgToSendWithLatency
         msg = Msg;
         id = ID;
     }
-
 }
 
